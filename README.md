@@ -1,6 +1,6 @@
 # Preventing Conflicting Gradients in Neural Marked Temporal Point Processes.
 
-This repository contains the code base to reproduce the main experiments of the paper 'Preventing Conflicting Gradients in Neural Marked Temporal Point Processes' under review for NEURIPS2024. 
+This repository contains the code base to reproduce the main experiments of the paper 'Preventing Conflicting Gradients in Neural Marked Temporal Point Processes'. 
 
 The base code is built on the implementations of ["Neural Temporal Point Processes For Modeling Electronic Health Records"](https://github.com/babylonhealth/neuralTPPs), (Enguehard et. al., 2020) and ["On the Predictive accuracy of Neural Temporal Point Process Models for Continuous-time Event Data"](https://github.com/tanguybosser/ntpp-tmlr2023), (Bosser and Ben Taieb, 2023). We thank the authors for sharing their valuable code. 
 
