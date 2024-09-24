@@ -1,0 +1,463 @@
+#!/bin/bash
+  
+#SBATCH --job-name=test
+#SBATCH --output=test.out
+
+#SBATCH --cpus-per-task=10
+#SBATCH --mem=10G
+#SBATCH --gres=gpu:1
+
+: "
+#THP
+
+for split in 0
+do
+python3 -u scripts/train.py --dataset 'github_filtered' --load-from-dir '../neuralTPPs/data/baseline3' \
+--save-results-dir 'results/github_filtered' --save-check-dir 'checkpoints/github_filtered' \
+--eval-metrics True --include-poisson False --patience 1 --batch-size 8 --split $split \
+--encoder 'gru' --encoder-encoding 'temporal_with_labels' --encoder-emb-dim 8 \
+--encoder-units-rnn 36 --encoder-layers-rnn 1 \
+--encoder-units-mlp 32 --encoder-activation-mlp 'relu' \
+--decoder 'thp' \
+--decoder-encoding 'log_times_only' --decoder-emb-dim 8 \
+--decoder-units-mlp 96 \
+--decoder-hist-time-grouping 'concatenation' \
+--separate-training False \
+--decoder-mc-prop-est 50 \
+--train-epochs 1
+done
+
+#THP-P
+
+for split in 0
+do
+python3 -u scripts/train.py --dataset 'stack_overflow_filtered' --load-from-dir '../neuralTPPs/data/baseline3' \
+--save-results-dir 'results/stack_overflow_filtered' --save-check-dir 'checkpoints/stack_overflow_filtered' \
+--eval-metrics True --include-poisson False --patience 50 --batch-size 8 --split $split \
+--encoder 'gru' --encoder-encoding 'temporal_with_labels' --encoder-emb-dim 8 \
+--encoder-units-rnn 42 --encoder-layers-rnn 1 \
+--encoder-units-mlp 32 --encoder-activation-mlp 'relu' \
+--decoder 'thp+' \
+--decoder-encoding 'log_times_only' --decoder-emb-dim 8 \
+--decoder-units-mlp 32 \
+--decoder-hist-time-grouping 'concatenation' \
+--separate-training False \
+--decoder-mc-prop-est 50 \
+--train-epochs 1
+done
+
+#THP-PP
+
+for split in 0
+do
+python3 -u scripts/train.py --dataset 'github_filtered' --load-from-dir '../neuralTPPs/data/baseline3' \
+--save-results-dir 'results/github_filtered' --save-check-dir 'checkpoints/github_filtered' \
+--eval-metrics True --include-poisson False --patience 1 --batch-size 8 --split $split \
+--encoder-histtime 'gru' --encoder-histmark 'gru' \
+--encoder-histtime-encoding 'temporal_with_labels' --encoder-histmark-encoding 'temporal_with_labels' --encoder-emb-dim 8 \
+--encoder-units-rnn 28 --encoder-layers-rnn 1 \
+--encoder-units-mlp 16 --encoder-activation-mlp 'relu' \
+--decoder 'thp++' \
+--decoder-encoding 'log_times_only' --decoder-emb-dim 8 \
+--decoder-units-mlp 32 \
+--decoder-hist-time-grouping 'concatenation' \
+--separate-training True \
+--decoder-mc-prop-est 50 \
+--train-epochs 1 
+done
+
+#THP-D
+
+for split in 0
+do
+python3 -u scripts/train.py --dataset 'github_filtered' --load-from-dir '../neuralTPPs/data/baseline3' \
+--save-results-dir 'results/github_filtered' --save-check-dir 'checkpoints/github_filtered' \
+--eval-metrics True --include-poisson False --patience 50 --batch-size 8 --split $split \
+--encoder 'gru' --encoder-encoding 'temporal_with_labels' --encoder-emb-dim 8 \
+--encoder-units-rnn 42 --encoder-layers-rnn 1 \
+--encoder-units-mlp 32 --encoder-activation-mlp 'relu' \
+--decoder 'thp-d' \
+--decoder-encoding 'log_times_only' --decoder-emb-dim 8 \
+--decoder-units-mlp 48 \
+--decoder-hist-time-grouping 'concatenation' \
+--separate-training False \
+--decoder-mc-prop-est 50 \
+--train-epochs 1
+done
+
+#THP-DD
+
+for split in 0
+do
+python3 -u scripts/train.py --dataset 'github_filtered' --load-from-dir '../neuralTPPs/data/baseline3' \
+--save-results-dir 'results/github_filtered' --save-check-dir 'checkpoints/github_filtered' \
+--eval-metrics True --include-poisson False --patience 50 --batch-size 8 --split $split \
+--encoder-histtime 'gru' --encoder-histmark 'gru' \
+--encoder-histtime-encoding 'temporal_with_labels' --encoder-histmark-encoding 'temporal_with_labels' --encoder-emb-dim 8 \
+--encoder-units-rnn 28 --encoder-layers-rnn 1 \
+--encoder-units-mlp 18 --encoder-activation-mlp 'relu' \
+--decoder 'thp-dd' \
+--decoder-encoding 'log_times_only' --decoder-emb-dim 8 \
+--decoder-units-mlp 48 \
+--decoder-hist-time-grouping 'concatenation' \
+--separate-training True \
+--decoder-mc-prop-est 50 \
+--train-epochs 1 
+done
+
+#STHP
+
+for split in 0
+do
+python3 -u scripts/train.py --dataset 'github_filtered' --load-from-dir '../neuralTPPs/data/baseline3' \
+--save-results-dir 'results/github_filtered' --save-check-dir 'checkpoints/github_filtered' \
+--eval-metrics True --include-poisson False --patience 50 --batch-size 8 --split $split \
+--encoder 'gru' --encoder-encoding 'temporal_with_labels' --encoder-emb-dim 8 \
+--encoder-units-rnn 42 --encoder-layers-rnn 1 \
+--encoder-units-mlp 32 --encoder-activation-mlp 'relu' \
+--decoder 'sthp' \
+--decoder-encoding 'log_times_only' --decoder-emb-dim 8 \
+--decoder-units-mlp 32 \
+--decoder-hist-time-grouping 'concatenation' \
+--separate-training False \
+--decoder-mc-prop-est 50 \
+--train-epochs 1
+done
+
+#STHP-PP
+
+for split in 0
+do
+python3 -u scripts/train.py --dataset 'github_filtered' --load-from-dir '../neuralTPPs/data/baseline3' \
+--save-results-dir 'results/github_filtered' --save-check-dir 'checkpoints/github_filtered' \
+--eval-metrics True --include-poisson False --patience 50 --batch-size 8 --split $split \
+--encoder-histtime 'gru' --encoder-histmark 'gru' \
+--encoder-histtime-encoding 'temporal_with_labels' --encoder-histmark-encoding 'temporal_with_labels' --encoder-emb-dim 8 \
+--encoder-units-rnn 28 --encoder-layers-rnn 1 \
+--encoder-units-mlp 16 --encoder-activation-mlp 'relu' \
+--decoder 'sthp++' \
+--decoder-encoding 'log_times_only' --decoder-emb-dim 8 \
+--decoder-units-mlp 32 \
+--decoder-hist-time-grouping 'concatenation' \
+--separate-training True \
+--decoder-mc-prop-est 50 \
+--train-epochs 1
+done
+
+#SAHP
+
+for split in 0
+do
+python3 -u scripts/train.py --dataset 'github_filtered' --load-from-dir '../neuralTPPs/data/baseline3' \
+--save-results-dir 'results/github_filtered' --save-check-dir 'checkpoints/github_filtered' \
+--eval-metrics True --include-poisson False --patience 50 --batch-size 8 --split $split \
+--encoder 'gru' --encoder-encoding 'temporal_with_labels' --encoder-emb-dim 8 \
+--encoder-units-rnn 46 --encoder-layers-rnn 1 \
+--encoder-units-mlp 32 --encoder-activation-mlp 'relu' \
+--decoder 'sahp' \
+--decoder-encoding 'log_times_only' --decoder-emb-dim 8 \
+--decoder-units-mlp 32 \
+--decoder-hist-time-grouping 'concatenation' \
+--separate-training False \
+--decoder-mc-prop-est 50 \
+--train-epochs 1 
+done
+
+#SAHP-P
+
+for split in 0
+do
+python3 -u scripts/train.py --dataset 'github_filtered' --load-from-dir '../neuralTPPs/data/baseline3' \
+--save-results-dir 'results/github_filtered' --save-check-dir 'checkpoints/github_filtered' \
+--eval-metrics True --include-poisson False --patience 50 --batch-size 8 --split $split \
+--encoder 'gru' --encoder-encoding 'temporal_with_labels' --encoder-emb-dim 8 \
+--encoder-units-rnn 46 --encoder-layers-rnn 1 \
+--encoder-units-mlp 32 --encoder-activation-mlp 'relu' \
+--decoder 'sahp+' \
+--decoder-encoding 'log_times_only' --decoder-emb-dim 8 \
+--decoder-units-mlp 16 \
+--decoder-hist-time-grouping 'concatenation' \
+--separate-training False \
+--decoder-mc-prop-est 50 \
+--train-epochs 1
+done
+
+
+#SAHP-PP
+
+for split in 0
+do
+python3 -u scripts/train.py --dataset 'github_filtered' --load-from-dir '../neuralTPPs/data/baseline3' \
+--save-results-dir 'results/github_filtered' --save-check-dir 'checkpoints/github_filtered' \
+--eval-metrics True --include-poisson False --patience 50 --batch-size 8 --split $split \
+--encoder-histtime 'gru' --encoder-histmark 'gru' \
+--encoder-histtime-encoding 'temporal_with_labels' --encoder-histmark-encoding 'temporal_with_labels' --encoder-emb-dim 8 \
+--encoder-units-rnn 32 --encoder-layers-rnn 1 \
+--encoder-units-mlp 16 --encoder-activation-mlp 'relu' \
+--decoder 'sahp++' \
+--decoder-encoding 'log_times_only' --decoder-emb-dim 8 \
+--decoder-units-mlp 16 \
+--decoder-hist-time-grouping 'concatenation' \
+--separate-training True \
+--decoder-mc-prop-est 50 \
+--train-epochs 1 
+done
+
+#SAHP-D
+
+for split in 0
+do
+python3 -u scripts/train.py --dataset 'github_filtered' --load-from-dir '../neuralTPPs/data/baseline3' \
+--save-results-dir 'results/github_filtered' --save-check-dir 'checkpoints/github_filtered' \
+--eval-metrics True --include-poisson False --patience 50 --batch-size 8 --split $split \
+--encoder 'gru' --encoder-encoding 'temporal_with_labels' --encoder-emb-dim 8 \
+--encoder-units-rnn 46 --encoder-layers-rnn 1 \
+--encoder-units-mlp 36 --encoder-activation-mlp 'relu' \
+--decoder 'sahp-d' \
+--decoder-encoding 'log_times_only' --decoder-emb-dim 8 \
+--decoder-units-mlp 16 \
+--decoder-hist-time-grouping 'concatenation' \
+--separate-training False \
+--decoder-mc-prop-est 50 \
+--train-epochs 1 
+done
+
+#SAHP-DD
+
+for split in 0
+do
+python3 -u scripts/train.py --dataset 'github_filtered' --load-from-dir '../neuralTPPs/data/baseline3' \
+--save-results-dir 'results/github_filtered' --save-check-dir 'checkpoints/github_filtered' \
+--eval-metrics True --include-poisson False --patience 50 --batch-size 8 --split $split \
+--encoder-histtime 'gru' --encoder-histmark 'gru' \
+--encoder-histtime-encoding 'temporal_with_labels' --encoder-histmark-encoding 'temporal_with_labels' --encoder-emb-dim 8 \
+--encoder-units-rnn 32 --encoder-layers-rnn 1 \
+--encoder-units-mlp 16 --encoder-activation-mlp 'relu' \
+--decoder 'sahp-dd' \
+--decoder-encoding 'log_times_only' --decoder-emb-dim 8 \
+--decoder-units-mlp 16 \
+--decoder-hist-time-grouping 'concatenation' \
+--separate-training True \
+--decoder-mc-prop-est 50 \
+--train-epochs 1 
+done
+
+
+#RMTPP
+
+for split in 0
+do
+python3 -u scripts/train.py --dataset 'github_filtered' --load-from-dir '../neuralTPPs/data/baseline3' \
+--save-results-dir 'results/github_filtered' --save-check-dir 'checkpoints/github_filtered' \
+--eval-metrics True --include-poisson False --patience 50 --batch-size 8 --split $split \
+--encoder 'gru' --encoder-encoding 'temporal_with_labels' --encoder-emb-dim 8 \
+--encoder-units-rnn 42 --encoder-layers-rnn 1 \
+--encoder-units-mlp 32 --encoder-activation-mlp 'relu' \
+--decoder 'rmtpp' \
+--decoder-encoding 'log_times_only' \
+--decoder-units-mlp 32 \
+--train-epochs 1
+done
+
+#RMTPP-P
+
+for split in 0
+do
+python3 -u scripts/train.py --dataset 'github_filtered' --load-from-dir '../neuralTPPs/data/baseline3' \
+--save-results-dir 'results/github_filtered' --save-check-dir 'checkpoints/github_filtered' \
+--eval-metrics True --include-poisson False --patience 50 --batch-size 8 --split $split \
+--encoder 'gru' --encoder-encoding 'temporal_with_labels' --encoder-emb-dim 8 \
+--encoder-units-rnn 42 --encoder-layers-rnn 1 \
+--encoder-units-mlp 32 --encoder-activation-mlp 'relu' \
+--decoder 'rmtpp+' \
+--decoder-encoding 'log_times_only' \
+--decoder-units-mlp 32 \
+--decoder-hist-time-grouping 'concatenation' \
+--train-epochs 1
+done
+
+#RMTPP-PP
+
+for split in 0
+do
+python3 -u scripts/train.py --dataset 'github_filtered' --load-from-dir '../neuralTPPs/data/baseline3' \
+--save-results-dir 'results/github_filtered' --save-check-dir 'checkpoints/github_filtered' \
+--eval-metrics True --include-poisson False --patience 50 --batch-size 8 --split $split \
+--encoder-histtime 'gru' --encoder-histmark 'gru' \
+--encoder-histtime-encoding 'temporal_with_labels' --encoder-histmark-encoding 'temporal_with_labels' --encoder-emb-dim 8 \
+--encoder-units-rnn 40 --encoder-layers-rnn 1 \
+--encoder-units-mlp 16 --encoder-activation-mlp 'relu' \
+--decoder 'rmtpp++' \
+--decoder-encoding 'log_times_only' \
+--decoder-units-mlp 16 \
+--separate-training True \
+--decoder-hist-time-grouping 'concatenation' \
+--train-epochs 1
+done
+
+#LNM
+
+for split in 0
+do
+python3 -u scripts/train.py --dataset 'github_filtered' --load-from-dir '../neuralTPPs/data/baseline3' \
+--save-results-dir 'results/github_filtered' --save-check-dir 'checkpoints/github_filtered' \
+--eval-metrics True --include-poisson False --patience 50 --batch-size 8 --split $split \
+--encoder 'gru' --encoder-encoding 'temporal_with_labels' --encoder-emb-dim 8 \
+--encoder-units-rnn 42 --encoder-layers-rnn 1 \
+--encoder-units-mlp 32 --encoder-activation-mlp 'relu' \
+--decoder 'lnm' \
+--decoder-encoding 'log_times_only' \
+--decoder-units-mlp 32 --decoder-units-mlp 16 \
+--decoder-n-mixture 32 \
+--train-epochs 1
+done
+
+#LNM-P
+
+for split in 0
+do
+python3 -u scripts/train.py --dataset 'github_filtered' --load-from-dir '../neuralTPPs/data/baseline3' \
+--save-results-dir 'results/github_filtered' --save-check-dir 'checkpoints/github_filtered' \
+--eval-metrics True --include-poisson False --patience 50 --batch-size 16 --split $split \
+--encoder 'gru' --encoder-encoding 'temporal_with_labels' --encoder-emb-dim 8 \
+--encoder-units-rnn 42 --encoder-layers-rnn 1 \
+--encoder-units-mlp 32 --encoder-activation-mlp 'relu' \
+--decoder 'lnm+' \
+--decoder-units-mlp 32 --decoder-units-mlp 16 \
+--decoder-n-mixture 32 \
+--decoder-encoding 'log_times_only' \
+--decoder-hist-time-grouping 'concatenation' \
+--train-epochs 1
+done
+
+#LNM-PP
+
+for split in 0
+do
+python3 -u scripts/train.py --dataset 'github_filtered' --load-from-dir '../neuralTPPs/data/baseline3' \
+--save-results-dir 'results/github_filtered' --save-check-dir 'checkpoints/github_filtered' \
+--eval-metrics True --include-poisson False --patience 50 --batch-size 8 --split $split \
+--encoder-histtime 'gru' --encoder-histmark 'gru' \
+--encoder-histtime-encoding 'temporal_with_labels' --encoder-histmark-encoding 'temporal_with_labels' --encoder-emb-dim 8 \
+--encoder-units-rnn 28 --encoder-layers-rnn 1 \
+--encoder-units-mlp 16 --encoder-activation-mlp 'relu' \
+--decoder 'lnm++' \
+--decoder-units-mlp 32 --decoder-units-mlp 16 \
+--decoder-n-mixture 32 \
+--decoder-encoding 'log_times_only' \
+--decoder-hist-time-grouping 'concatenation' \
+--separate-training True \
+--train-epochs 1
+done
+"
+
+#LNM-Joint
+
+for split in 0
+do
+python3 -u scripts/train.py --dataset 'github_filtered' --load-from-dir '../neuralTPPs/data/baseline3' \
+--save-results-dir 'results/github_filtered' --save-check-dir 'checkpoints/github_filtered' \
+--eval-metrics True --include-poisson False --patience 50 --batch-size 8 --split $split \
+--encoder 'gru' --encoder-encoding 'temporal_with_labels' --encoder-emb-dim 8 \
+--encoder-units-rnn 42 --encoder-layers-rnn 1 \
+--encoder-units-mlp 32 --encoder-activation-mlp 'relu' \
+--decoder 'joint-lnm' \
+--decoder-units-mlp 32 --decoder-units-mlp 16 \
+--decoder-n-mixture 32 \
+--train-epochs 1
+done
+
+#FNN
+
+for split in 0
+do
+python3 -u scripts/train.py --dataset 'github_filtered' --load-from-dir '../neuralTPPs/data/baseline3' \
+--save-results-dir 'results/github_filtered' --save-check-dir 'checkpoints/github_filtered' \
+--eval-metrics True --include-poisson False --patience 50 --batch-size 8 --split $split \
+--encoder 'gru' --encoder-encoding 'temporal_with_labels' --encoder-emb-dim 8 --encoder-embedding-constraint 'nonneg' \
+--encoder-units-rnn 42 --encoder-layers-rnn 1 --encoder-constraint-rnn 'nonneg' \
+--encoder-units-mlp 32 --encoder-activation-mlp 'relu' --encoder-constraint-mlp 'nonneg' \
+--decoder 'fnn' --decoder-encoding 'log_times_only' --decoder-emb-dim 8 --decoder-embedding-constraint 'nonneg' \
+--decoder-units-mlp 64 --decoder-units-mlp 46 --decoder-activation-mlp 'gumbel_softplus' \
+--decoder-activation-final-mlp 'parametric_softplus' --decoder-constraint-mlp 'nonneg' \
+--train-epochs 1
+done
+
+: "
+#FNN-P
+
+for split in 0
+do
+python3 -u scripts/train.py --dataset 'github_filtered' --load-from-dir '../neuralTPPs/data/baseline3' \
+--save-results-dir 'results/github_filtered' --save-check-dir 'checkpoints/github_filtered' \
+--eval-metrics True --include-poisson False --patience 50 --batch-size 8 --split $split \
+--encoder 'gru' --encoder-encoding 'temporal_with_labels' --encoder-emb-dim 8 --encoder-embedding-constraint 'nonneg' \
+--encoder-units-rnn 42 --encoder-layers-rnn 1 --encoder-constraint-rnn 'nonneg' \
+--encoder-units-mlp 32 --encoder-activation-mlp 'relu' --encoder-constraint-mlp 'nonneg' \
+--decoder 'fnn+' --decoder-encoding 'log_times_only' --decoder-emb-dim 8 --decoder-embedding-constraint 'nonneg' \
+--decoder-units-mlp 64 --decoder-units-mlp 26 --decoder-activation-mlp 'gumbel_softplus' \
+--decoder-activation-final-mlp 'parametric_softplus' --decoder-constraint-mlp 'nonneg' \
+--decoder-hist-time-grouping 'concatenation' \
+--train-epochs 1
+done
+
+
+#FNN-PP
+
+for split in 0
+do
+python3 -u scripts/train.py --dataset 'github_filtered' --load-from-dir '../neuralTPPs/data/baseline3' \
+--save-results-dir 'results/github_filtered' --save-check-dir 'checkpoints/github_filtered' \
+--eval-metrics True --include-poisson False --patience 50 --batch-size 8 --split $split \
+--encoder-histtime 'gru' --encoder-histmark 'gru' \
+--encoder-histtime-encoding 'temporal_with_labels' --encoder-histmark-encoding 'temporal_with_labels' \
+--encoder-emb-dim 8 --encoder-embedding-constraint 'nonneg' \
+--encoder-units-rnn 30 --encoder-layers-rnn 1 --encoder-constraint-rnn 'nonneg' \
+--encoder-units-mlp 16 --encoder-activation-mlp 'relu' --encoder-constraint-mlp 'nonneg' \
+--decoder 'fnn++' --decoder-encoding 'log_times_only' --decoder-emb-dim 8 --decoder-embedding-constraint 'nonneg' \
+--decoder-units-mlp 32 --decoder-units-mlp 32 --decoder-activation-mlp 'gumbel_softplus' \
+--decoder-activation-final-mlp 'parametric_softplus' --decoder-constraint-mlp 'nonneg' \
+--decoder-hist-time-grouping 'concatenation' \
+--separate-training True \
+--train-epochs 5
+done 
+
+#FNN-D
+
+for split in 0
+do
+python3 -u scripts/train.py --dataset 'github_filtered' --load-from-dir '../neuralTPPs/data/baseline3' \
+--save-results-dir 'results/github_filtered' --save-check-dir 'checkpoints/github_filtered' \
+--eval-metrics True --include-poisson False --patience 50 --batch-size 8 --split $split \
+--encoder 'gru' --encoder-encoding 'temporal_with_labels' --encoder-emb-dim 8 --encoder-embedding-constraint 'nonneg' \
+--encoder-units-rnn 44 --encoder-layers-rnn 1 --encoder-constraint-rnn 'nonneg' \
+--encoder-units-mlp 36 --encoder-activation-mlp 'relu' --encoder-constraint-mlp 'nonneg' \
+--decoder 'fnn-d' --decoder-encoding 'log_times_only' --decoder-emb-dim 8 --decoder-embedding-constraint 'nonneg' \
+--decoder-units-mlp 36 --decoder-units-mlp 30 --decoder-activation-mlp 'gumbel_softplus' \
+--decoder-activation-final-mlp 'parametric_softplus' --decoder-constraint-mlp 'nonneg' \
+--train-epochs 1
+done
+
+
+#FNN-DD
+
+for split in 0
+do
+python3 -u scripts/train.py --dataset 'github_filtered' --load-from-dir '../neuralTPPs/data/baseline3' \
+--save-results-dir 'results/github_filtered' --save-check-dir 'checkpoints/github_filtered' \
+--eval-metrics True --include-poisson False --patience 50 --batch-size 8 --split $split \
+--encoder-histtime 'gru' --encoder-histmark 'gru' \
+--encoder-histtime-encoding 'temporal_with_labels' --encoder-histmark-encoding 'temporal_with_labels' \
+--encoder-emb-dim 8 --encoder-embedding-constraint 'nonneg' \
+--encoder-units-rnn 30 --encoder-layers-rnn 1 --encoder-constraint-rnn 'nonneg' \
+--encoder-units-mlp 18 --encoder-activation-mlp 'relu' --encoder-constraint-mlp 'nonneg' \
+--decoder 'fnn-dd' --decoder-encoding 'log_times_only' --decoder-emb-dim 8 --decoder-embedding-constraint 'nonneg' \
+--decoder-units-mlp 36 --decoder-units-mlp 30 --decoder-activation-mlp 'gumbel_softplus' \
+--decoder-activation-final-mlp 'parametric_softplus' --decoder-constraint-mlp 'nonneg' \
+--decoder-hist-time-grouping 'concatenation' \
+--separate-training True \
+--train-epochs 1
+done 
+
+
+

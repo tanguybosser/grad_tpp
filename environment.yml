@@ -1,0 +1,28 @@
+name: tpp_grad
+channels:
+  - defaults
+  - pytorch
+  - conda-forge
+dependencies:
+  - python
+  - pytorch
+  - torchvision
+  - cudatoolkit
+  - cudatoolkit-dev
+  - numpy
+  - matplotlib
+  - pip
+  - tqdm
+  - gitpython
+  - pytest
+  - scipy
+  - toolz
+  - seaborn
+  - pip:
+    - requests
+    - dill
+    - Pillow
+    - imageio
+    - pandas
+    - scikit-learn
+    - tabulate

@@ -1,0 +1,84 @@
+#!/bin/bash
+  
+#SBATCH --job-name=fnn_d
+#SBATCH --output=fnn_d.out
+
+#SBATCH --cpus-per-task=10
+#SBATCH --mem=10G
+#SBATCH --gres=gpu:1
+
+##LastFM
+
+for split in {0..2}
+do
+python3 -u scripts/train.py --dataset 'lastfm_filtered' --load-from-dir 'data' \
+--save-results-dir 'results/lastfm_filtered' --save-check-dir 'checkpoints/lastfm_filtered' \
+--eval-metrics True --include-poisson False --patience 50 --batch-size 8 --split $split \
+--encoder 'gru' --encoder-encoding 'temporal_with_labels' --encoder-emb-dim 8 --encoder-embedding-constraint 'nonneg' \
+--encoder-units-rnn 44 --encoder-layers-rnn 1 --encoder-constraint-rnn 'nonneg' \
+--encoder-units-mlp 36 --encoder-activation-mlp 'relu' --encoder-constraint-mlp 'nonneg' \
+--decoder 'fnn-d' --decoder-encoding 'log_times_only' --decoder-emb-dim 8 --decoder-embedding-constraint 'nonneg' \
+--decoder-units-mlp 36 --decoder-units-mlp 30 --decoder-activation-mlp 'gumbel_softplus' \
+--decoder-activation-final-mlp 'parametric_softplus' --decoder-constraint-mlp 'nonneg'
+done
+
+##MOOC
+
+for split in {0..2}
+do
+python3 -u scripts/train.py --dataset 'mooc_filtered' --load-from-dir 'data' \
+--save-results-dir 'results/mooc_filtered' --save-check-dir 'checkpoints/mooc_filtered' \
+--eval-metrics True --include-poisson False --patience 50 --batch-size 32 --split $split \
+--encoder 'gru' --encoder-encoding 'temporal_with_labels' --encoder-emb-dim 8 --encoder-embedding-constraint 'nonneg' \
+--encoder-units-rnn 44 --encoder-layers-rnn 1 --encoder-constraint-rnn 'nonneg' \
+--encoder-units-mlp 36 --encoder-activation-mlp 'relu' --encoder-constraint-mlp 'nonneg' \
+--decoder 'fnn-d' --decoder-encoding 'log_times_only' --decoder-emb-dim 8 --decoder-embedding-constraint 'nonneg' \
+--decoder-units-mlp 36 --decoder-units-mlp 30 --decoder-activation-mlp 'gumbel_softplus' \
+--decoder-activation-final-mlp 'parametric_softplus' --decoder-constraint-mlp 'nonneg'
+done
+
+
+##Stack
+
+for split in {0..2}
+do
+python3 -u scripts/train.py --dataset 'stack_overflow_filtered' --load-from-dir 'data' \
+--save-results-dir 'results/stack_overflow_filtered' --save-check-dir 'checkpoints/stack_overflow_filtered' \
+--eval-metrics True --include-poisson False --patience 50 --batch-size 8 --split $split \
+--encoder 'gru' --encoder-encoding 'temporal_with_labels' --encoder-emb-dim 8 --encoder-embedding-constraint 'nonneg' \
+--encoder-units-rnn 44 --encoder-layers-rnn 1 --encoder-constraint-rnn 'nonneg' \
+--encoder-units-mlp 36 --encoder-activation-mlp 'relu' --encoder-constraint-mlp 'nonneg' \
+--decoder 'fnn-d' --decoder-encoding 'log_times_only' --decoder-emb-dim 8 --decoder-embedding-constraint 'nonneg' \
+--decoder-units-mlp 36 --decoder-units-mlp 30 --decoder-activation-mlp 'gumbel_softplus' \
+--decoder-activation-final-mlp 'parametric_softplus' --decoder-constraint-mlp 'nonneg'
+done
+
+##Github
+
+for split in {0..2}
+do
+python3 -u scripts/train.py --dataset 'github_filtered' --load-from-dir 'data' \
+--save-results-dir 'results/github_filtered' --save-check-dir 'checkpoints/github_filtered' \
+--eval-metrics True --include-poisson False --patience 50 --batch-size 8 --split $split \
+--encoder 'gru' --encoder-encoding 'temporal_with_labels' --encoder-emb-dim 8 --encoder-embedding-constraint 'nonneg' \
+--encoder-units-rnn 44 --encoder-layers-rnn 1 --encoder-constraint-rnn 'nonneg' \
+--encoder-units-mlp 36 --encoder-activation-mlp 'relu' --encoder-constraint-mlp 'nonneg' \
+--decoder 'fnn-d' --decoder-encoding 'log_times_only' --decoder-emb-dim 8 --decoder-embedding-constraint 'nonneg' \
+--decoder-units-mlp 36 --decoder-units-mlp 30 --decoder-activation-mlp 'gumbel_softplus' \
+--decoder-activation-final-mlp 'parametric_softplus' --decoder-constraint-mlp 'nonneg'
+done
+
+##Reddit
+
+for split in {0..2}
+do
+python3 -u scripts/train.py --dataset 'reddit_filtered_short' --load-from-dir 'data' \
+--save-results-dir 'results/reddit_filtered_short' --save-check-dir 'checkpoints/reddit_filtered_short' \
+--eval-metrics True --include-poisson False --patience 50 --batch-size 8 --split $split \
+--encoder 'gru' --encoder-encoding 'temporal_with_labels' --encoder-emb-dim 8 --encoder-embedding-constraint 'nonneg' \
+--encoder-units-rnn 44 --encoder-layers-rnn 1 --encoder-constraint-rnn 'nonneg' \
+--encoder-units-mlp 36 --encoder-activation-mlp 'relu' --encoder-constraint-mlp 'nonneg' \
+--decoder 'fnn-d' --decoder-encoding 'log_times_only' --decoder-emb-dim 8 --decoder-embedding-constraint 'nonneg' \
+--decoder-units-mlp 36 --decoder-units-mlp 30 --decoder-activation-mlp 'gumbel_softplus' \
+--decoder-activation-final-mlp 'parametric_softplus' --decoder-constraint-mlp 'nonneg'
+done
